@@ -1,0 +1,726 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="POI," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
+<meta name="keywords" content="POI">
+<meta property="og:type" content="article">
+<meta property="og:title" content="百度地图POI信息爬取">
+<meta property="og:url" content="https://jieme.github.io/pirblog/2017/12/01/百度地图POI信息爬取/index.html">
+<meta property="og:site_name" content="pirblog">
+<meta property="og:description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-11-30T16:50:03.462Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="百度地图POI信息爬取">
+<meta name="twitter:description" content="12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://jieme.github.io/pirblog/2017/12/01/百度地图POI信息爬取/"/>
+
+
+
+
+
+  <title> 百度地图POI信息爬取 | pirblog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?b2e95989d179f3f65f35cc3dddf2f82c";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">pirblog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://jieme.github.io/pirblog/2017/12/01/百度地图POI信息爬取/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jieme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="pirblog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                百度地图POI信息爬取
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-01T00:46:00+08:00">
+                2017-12-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/GIS/" itemprop="url" rel="index">
+                    <span itemprop="name">GIS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div><div class="line">195</div><div class="line">196</div><div class="line">197</div><div class="line">198</div><div class="line">199</div><div class="line">200</div><div class="line">201</div><div class="line">202</div><div class="line">203</div><div class="line">204</div><div class="line">205</div><div class="line">206</div><div class="line">207</div><div class="line">208</div><div class="line">209</div><div class="line">210</div><div class="line">211</div><div class="line">212</div><div class="line">213</div><div class="line">214</div><div class="line">215</div><div class="line">216</div><div class="line">217</div><div class="line">218</div><div class="line">219</div><div class="line">220</div><div class="line">221</div><div class="line">222</div><div class="line">223</div><div class="line">224</div><div class="line">225</div><div class="line">226</div><div class="line">227</div><div class="line">228</div><div class="line">229</div><div class="line">230</div><div class="line">231</div><div class="line">232</div><div class="line">233</div><div class="line">234</div><div class="line">235</div><div class="line">236</div><div class="line">237</div><div class="line">238</div><div class="line">239</div><div class="line">240</div><div class="line">241</div><div class="line">242</div><div class="line">243</div><div class="line">244</div><div class="line">245</div><div class="line">246</div><div class="line">247</div><div class="line">248</div><div class="line">249</div><div class="line">250</div><div class="line">251</div><div class="line">252</div><div class="line">253</div><div class="line">254</div><div class="line">255</div><div class="line">256</div><div class="line">257</div><div class="line">258</div><div class="line">259</div><div class="line">260</div><div class="line">261</div><div class="line">262</div><div class="line">263</div><div class="line">264</div><div class="line">265</div><div class="line">266</div><div class="line">267</div><div class="line">268</div><div class="line">269</div><div class="line">270</div><div class="line">271</div><div class="line">272</div><div class="line">273</div><div class="line">274</div><div class="line">275</div><div class="line">276</div><div class="line">277</div><div class="line">278</div><div class="line">279</div><div class="line">280</div><div class="line">281</div><div class="line">282</div><div class="line">283</div><div class="line">284</div><div class="line">285</div><div class="line">286</div><div class="line">287</div><div class="line">288</div><div class="line">289</div><div class="line">290</div><div class="line">291</div><div class="line">292</div><div class="line">293</div><div class="line">294</div><div class="line">295</div><div class="line">296</div><div class="line">297</div><div class="line">298</div><div class="line">299</div><div class="line">300</div><div class="line">301</div><div class="line">302</div><div class="line">303</div><div class="line">304</div><div class="line">305</div><div class="line">306</div><div class="line">307</div><div class="line">308</div><div class="line">309</div><div class="line">310</div><div class="line">311</div><div class="line">312</div><div class="line">313</div><div class="line">314</div><div class="line">315</div><div class="line">316</div><div class="line">317</div><div class="line">318</div><div class="line">319</div><div class="line">320</div><div class="line">321</div><div class="line">322</div><div class="line">323</div><div class="line">324</div><div class="line">325</div><div class="line">326</div><div class="line">327</div><div class="line">328</div><div class="line">329</div><div class="line">330</div><div class="line">331</div><div class="line">332</div><div class="line">333</div><div class="line">334</div><div class="line">335</div><div class="line">336</div><div class="line">337</div><div class="line">338</div><div class="line">339</div><div class="line">340</div><div class="line">341</div><div class="line">342</div><div class="line">343</div><div class="line">344</div><div class="line">345</div><div class="line">346</div><div class="line">347</div><div class="line">348</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPEhtml PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">htmlxmlns="http:</span>//<span class="attr">www.w3.org</span>/<span class="attr">1999</span>/<span class="attr">xhtml</span>"&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">metahttp-equiv="Content-Type"content="text</span>/<span class="attr">html</span>; <span class="attr">charset</span>=<span class="string">utf-8</span>"/&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">metaname="viewport"content="initial-scale=1.0,</span> <span class="attr">user-scalable</span>=<span class="string">no</span>"/&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>百度地图POI信息爬取（任意多边形区域）<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">styletype="text</span>/<span class="attr">css</span>"&gt;</span> </div><div class="line">html&#123;height:100%&#125; </div><div class="line">body&#123;height:100%;margin:0px;padding:0px&#125; </div><div class="line">#container&#123;height:100%&#125; </div><div class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></div><div class="line"> </div><div class="line"><span class="tag">&lt;<span class="name">scripttype="text</span>/<span class="attr">javascript</span>"<span class="attr">src</span>=<span class="string">"http://api.map.baidu.com/api?v=2.0&amp;ak=91a73a33c8964682fdba3f89dc96f279"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"> </div><div class="line"><span class="comment">&lt;!--加载鼠标绘制工具--&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">scripttype="text</span>/<span class="attr">javascript</span>"<span class="attr">src</span>=<span class="string">"http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">scripttype="text</span>/<span class="attr">javascript</span>"&gt;</span></div><div class="line">    try&#123;</div><div class="line">        var fso = new ActiveXObject("Scripting.FileSystemObject");//获取对象</div><div class="line">    &#125;catch(e)</div><div class="line">    &#123;</div><div class="line">        alert("ActiveXObject对象创建失败，数据将无法保存。"); </div><div class="line">    &#125;</div><div class="line">    var tf; //文件句柄</div><div class="line">    var pointList = new Array();    //坐标列表</div><div class="line">    var bounds; //矩形区域</div><div class="line">    var step = 0.001;   //密度</div><div class="line">    var map;</div><div class="line">    var poi;</div><div class="line">    var tipsDom;    //运行提示DOM</div><div class="line">    var drawingManager;</div><div class="line">    window.onload=function()//用window的onload事件，窗体加载完毕的时候</div><div class="line">    &#123;</div><div class="line">        tipsDom = document.getElementById("tips");</div><div class="line">        map = new BMap.Map('container');</div><div class="line">        poi = new BMap.Point(116.307852,40.057031);</div><div class="line">        map.centerAndZoom(poi, 16);</div><div class="line">        map.addControl(new BMap.NavigationControl());               // 添加平移缩放控件</div><div class="line">        map.addControl(new BMap.ScaleControl());                    // 添加比例尺控件</div><div class="line">        map.addControl(new BMap.OverviewMapControl());              //添加缩略地图控件</div><div class="line">        map.enableScrollWheelZoom();</div><div class="line">         </div><div class="line">         newDrawingManager()</div><div class="line">         </div><div class="line">    &#125;</div><div class="line">    function newDrawingManager()</div><div class="line">    &#123;</div><div class="line">        var styleOptions = &#123;</div><div class="line">            strokeColor:"red",    //边线颜色。</div><div class="line">            fillColor:"red",      //填充颜色。当参数为空时，圆形将没有填充效果。</div><div class="line">            strokeWeight: 3,       //边线的宽度，以像素为单位。</div><div class="line">            strokeOpacity: 0.8,    //边线透明度，取值范围0 - 1。</div><div class="line">            fillOpacity: 0.6,      //填充的透明度，取值范围0 - 1。</div><div class="line">            strokeStyle: 'solid' //边线的样式，solid或dashed。</div><div class="line">        &#125;</div><div class="line">        //实例化鼠标绘制工具</div><div class="line">        drawingManager = new BMapLib.DrawingManager(map, &#123;</div><div class="line">            isOpen: true, //是否开启绘制模式</div><div class="line">            drawingToolOptions: &#123;</div><div class="line">                anchor: BMAP_ANCHOR_TOP_RIGHT, //位置</div><div class="line">                offset: new BMap.Size(5, 5), //偏离值</div><div class="line">                scale: 0.8 //工具栏缩放比例</div><div class="line">            &#125;,</div><div class="line">            circleOptions: styleOptions, //圆的样式</div><div class="line">            polylineOptions: styleOptions, //线的样式</div><div class="line">            polygonOptions: styleOptions, //多边形的样式</div><div class="line">            rectangleOptions: styleOptions //矩形的样式</div><div class="line">        &#125;);</div><div class="line">        drawingManager.setDrawingMode(BMAP_DRAWING_POLYLINE);</div><div class="line">        drawingManager.disableCalculate();</div><div class="line">        drawingManager.addEventListener('overlaycomplete', overlaycomplete);</div><div class="line">        drawingManager.open(); </div><div class="line">    &#125;</div><div class="line">     </div><div class="line">    var overlaycomplete =function (e)&#123;</div><div class="line">        //绘制完成回调函数</div><div class="line">        runTips("图形绘制完成.");</div><div class="line">        var o = e.overlay;</div><div class="line">        bounds = o.getBounds();</div><div class="line">        drawingManager.close();//关闭地图的绘制状态</div><div class="line">        hanPoint2(bounds);</div><div class="line">    &#125;</div><div class="line">     </div><div class="line">     </div><div class="line">    function hanPoint2(bounds)</div><div class="line">    &#123;</div><div class="line">        runTips("开始处理.");</div><div class="line">        var southWest = bounds.getSouthWest();  //矩形区域的西南角</div><div class="line">        var northEast = bounds.getNorthEast();  //矩形区域的东北角</div><div class="line">        var startX = southWest.lat;     //X轴开始循环值</div><div class="line">        var startY = southWest.lng;     //Y轴开始循环值</div><div class="line">        var endX = northEast.lat;       //X轴结束循环值</div><div class="line">        var endY = northEast.lng;       //Y轴结束循环值</div><div class="line">        if(southWest.equals(northEast))</div><div class="line">        &#123;</div><div class="line">            //点</div><div class="line">            pointList.push(new BMap.Point(startY,startX));</div><div class="line">        &#125;else if(startX == endX || startY == endY)</div><div class="line">        &#123;</div><div class="line">            //线</div><div class="line">            if(startX == endX)&#123;</div><div class="line">                for(startY = southWest.lng;startY <span class="tag">&lt;<span class="name">=</span> <span class="attr">endY</span>; <span class="attr">startY</span> += <span class="string">step)</span></span></div><div class="line"><span class="tag">                &#123;</span></div><div class="line"><span class="tag">                    <span class="attr">pointList.push</span>(<span class="attr">new</span> <span class="attr">BMap.Point</span>(<span class="attr">startY</span>,<span class="attr">startX</span>));</span></div><div class="line"><span class="tag">                &#125;</span></div><div class="line"><span class="tag">            &#125;<span class="attr">else</span>&#123;</span></div><div class="line">                for(startX = southWest.lat;startX &lt;= endX;startX += step)</div><div class="line">                &#123;</div><div class="line">                    pointList.push(new BMap.Point(startY,startX));</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;else&#123;</div><div class="line">             </div><div class="line">            //面</div><div class="line">            var boundsList = cuttingBounds(bounds);</div><div class="line">            if(boundsList.length &gt; 1)</div><div class="line">            &#123;</div><div class="line">                for( i in boundsList)</div><div class="line">                &#123;</div><div class="line">                    var b = boundsList[i];</div><div class="line">                    if(bounds.containsBounds(b))</div><div class="line">                    &#123;</div><div class="line">                        //完全包含</div><div class="line">                        pointList = pointList.concat(getPointByBounds(b));</div><div class="line">                    &#125;else&#123;</div><div class="line">                        //不完全包含,进行过滤</div><div class="line">                        pointList = pointList.concat(containsPonint(getPointByBounds(b))); </div><div class="line">                    &#125;</div><div class="line">                     </div><div class="line">                &#125;</div><div class="line">            &#125;else&#123;</div><div class="line">                //自身区域,需过滤</div><div class="line">                pointList = pointList.concat(containsPonint(getPointByBounds(boundsList[0])));</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        geocoder();</div><div class="line">    &#125;</div><div class="line">     </div><div class="line">    //切割区域,返回切割后的区域列表</div><div class="line">    function cuttingBounds(bounds)</div><div class="line">    &#123;</div><div class="line">        runTips("区域切割.");</div><div class="line">        var lengX = step * 10;  //切割长度X</div><div class="line">        var lengY = step * 10;  //切割长度Y</div><div class="line">        var boundsList = new Array();</div><div class="line">        var southWest = bounds.getSouthWest();  //矩形区域的西南角</div><div class="line">        var northEast = bounds.getNorthEast();  //矩形区域的东北角</div><div class="line">        var startX = southWest.lat;     //X轴开始循环值</div><div class="line">        var startY = southWest.lng;     //Y轴开始循环值</div><div class="line">        var endX = northEast.lat;       //X轴结束循环值</div><div class="line">        var endY = northEast.lng;       //Y轴结束循环值</div><div class="line">        if(endX - startX &gt;= lengX || endY - endX &gt;= lengY)</div><div class="line">        &#123;</div><div class="line">            boundsList.push(bounds);</div><div class="line">            return boundsList;</div><div class="line">        &#125;</div><div class="line">        while(startX <span class="tag">&lt; <span class="attr">endX</span>)</span></div><div class="line"><span class="tag">        &#123;</span></div><div class="line"><span class="tag">            <span class="attr">var</span> <span class="attr">tempX</span>= <span class="string">startX+</span> <span class="attr">lengX</span>;</span></div><div class="line"><span class="tag">            <span class="attr">if</span>(<span class="attr">tempX</span> &gt;</span>= endX)</div><div class="line">            &#123;</div><div class="line">                //超出范围</div><div class="line">                tempX = endX;</div><div class="line">            &#125;</div><div class="line">            startY = southWest.lng;</div><div class="line">            isY = true;</div><div class="line">            while(startY <span class="tag">&lt; <span class="attr">endY</span>)</span></div><div class="line"><span class="tag">            &#123;</span></div><div class="line"><span class="tag">                <span class="attr">var</span> <span class="attr">tempY</span>= <span class="string">startY+</span> <span class="attr">lengY</span>;</span></div><div class="line"><span class="tag">                <span class="attr">if</span>(<span class="attr">tempY</span> &gt;</span>= endY)</div><div class="line">                &#123;</div><div class="line">                    //超出范围</div><div class="line">                    tempY = endY;</div><div class="line">                &#125;</div><div class="line">                boundsList.push(new BMapLib.Bounds(new BMapLib.Point(startY,startX),new BMapLib.Point(tempY,tempX)));</div><div class="line">                startY = tempY + step;</div><div class="line">            &#125;</div><div class="line">            startX = tempX + step;</div><div class="line">        &#125;</div><div class="line">        return boundsList;</div><div class="line">    &#125;</div><div class="line">    //获取矩形区域内的所有点</div><div class="line">    function getPointByBounds(bounds)</div><div class="line">    &#123;</div><div class="line">        runTips("获取点数据.");</div><div class="line">        var southWest = bounds.getSouthWest();  //矩形区域的西南角</div><div class="line">        var northEast = bounds.getNorthEast();  //矩形区域的东北角</div><div class="line">        var startX;     //X轴开始循环值</div><div class="line">        var startY;     //Y轴开始循环值</div><div class="line">        var endX = northEast.lat;       //X轴结束循环值</div><div class="line">        var endY = northEast.lng;       //Y轴结束循环值</div><div class="line">        var pl = new Array();</div><div class="line">        for(startX = southWest.lat;startX <span class="tag">&lt;<span class="name">=</span> <span class="attr">endX</span>;<span class="attr">startX</span> += <span class="string">step)</span></span></div><div class="line"><span class="tag">        &#123;</span></div><div class="line">            for(startY = southWest.lng;startY &lt;= endY; startY += step)</div><div class="line">            &#123;</div><div class="line">                pl.push(new BMap.Point(startY,startX));</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return pl;</div><div class="line">    &#125;</div><div class="line">    //过滤此区域内的点</div><div class="line">    function containsPonint(list)</div><div class="line">    &#123;</div><div class="line">        runTips("点有效性检查.");</div><div class="line">        var l = new Array();</div><div class="line">        for(i in list)</div><div class="line">        &#123;</div><div class="line">            var p = list[i];</div><div class="line">            if(bounds.containsPoint(p))</div><div class="line">            &#123;</div><div class="line">                //在此区域内</div><div class="line">                l.push(p);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return l;</div><div class="line">    &#125;</div><div class="line">    //如果点未处理过且在矩形区域内</div><div class="line">    function isPoint(point)</div><div class="line">    &#123;</div><div class="line">        if(bounds.containsPoint(point) == false)</div><div class="line">        &#123;</div><div class="line">            //不在区域内</div><div class="line">            return false;</div><div class="line">        &#125;</div><div class="line">        for(i in pointList)</div><div class="line">        &#123;</div><div class="line">            if(pointList[i].equals(point))</div><div class="line">            &#123;</div><div class="line">                //列表中已存在</div><div class="line">                return false;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return true;</div><div class="line">    &#125;</div><div class="line">    var gIndex =0;</div><div class="line">    //逆地址解析</div><div class="line">    function geocoder()</div><div class="line">    &#123;</div><div class="line">        runTips("准备解析数据.");</div><div class="line">        if(pointList != null &amp;&amp; pointList.length &gt; 0)</div><div class="line">        &#123;</div><div class="line">            tf = createFile("c://poi.txt");//数据保存地址</div><div class="line">            for(var i =0;i<span class="tag">&lt;<span class="name">100;i++)</span>  //地址解析线程</span></div><div class="line"><span class="tag">            &#123;</span></div><div class="line"><span class="tag">                <span class="attr">setTimeout</span>(<span class="attr">function</span>()&#123;</span></div><div class="line"><span class="tag">                <span class="attr">getLocation</span>(<span class="attr">gIndex</span>);</span></div><div class="line"><span class="tag">                &#125;,<span class="attr">100</span>)</span></div><div class="line"><span class="tag">                <span class="attr">gIndex</span>++;</span></div><div class="line"><span class="tag">                 </span></div><div class="line"><span class="tag">            &#125;</span></div><div class="line"><span class="tag">             </span></div><div class="line"><span class="tag">        &#125;</span></div><div class="line"><span class="tag">    &#125;</span></div><div class="line"><span class="tag">    //解析列表地址,同步</span></div><div class="line"><span class="tag">    <span class="attr">function</span> <span class="attr">getLocation</span>(<span class="attr">index</span>)</span></div><div class="line"><span class="tag">    &#123;</span></div><div class="line"><span class="tag">        <span class="attr">var</span> <span class="attr">geo</span>= <span class="string">newBMap.Geocoder();</span></span></div><div class="line">        if(index &lt; pointList.length)</div><div class="line">        &#123;</div><div class="line">            var p= pointList[index];</div><div class="line">            runTips("解析节点：["+ p.lng +"," + p.lat + "]，进度：" + index + "/" + pointList.length);</div><div class="line">            geo.getLocation(p,function(gr)&#123;</div><div class="line">                if(gr != null)</div><div class="line">                &#123;</div><div class="line">                    var address= gr.addressComponents.city+gr.addressComponents.district+gr.addressComponents.street   //只取城市、区县、街道名称</div><div class="line">                    if(tf!=null)</div><div class="line">                        tf.WriteLine(address);</div><div class="line">                    runTips("加入数据："+address)</div><div class="line">                    var spList= gr.surroundingPois;</div><div class="line">                    for(i in spList)</div><div class="line">                    &#123;</div><div class="line">                        var title=spList[i].title;</div><div class="line">                        if(tf!=null)</div><div class="line">                            tf.WriteLine(title);</div><div class="line">                        runTips("加入数据："+title);</div><div class="line">                    &#125;</div><div class="line">                &#125;else&#123;</div><div class="line">                    console.log(null);</div><div class="line">                &#125;</div><div class="line">                gIndex++;</div><div class="line">                getLocation(gIndex);</div><div class="line">            &#125;);</div><div class="line">        &#125;else&#123;</div><div class="line">            drawingManager.open();  //开启地图的绘制模式</div><div class="line">            runTips("处理完成.");</div><div class="line">            tf.Close();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    //创建指定路径文件,并返回文件句柄</div><div class="line">    function createFile(path)</div><div class="line">    &#123;</div><div class="line">        if(fso != null)</div><div class="line">        &#123;</div><div class="line">            tf= fso.CreateTextFile(path, true);//创建一个文件夹</div><div class="line">        &#125;</div><div class="line">       return tf;</div><div class="line">        </div><div class="line">    &#125;</div><div class="line">    //设置爬取密度</div><div class="line">    function setStep(t)</div><div class="line">    &#123;</div><div class="line">         </div><div class="line">            try&#123;</div><div class="line">            var temp= parseFloat(document.getElementById("step").value);</div><div class="line">            if(temp &gt; 0)</div><div class="line">            &#123;</div><div class="line">                step = temp;</div><div class="line">                alert("设置成功.");</div><div class="line">            &#125;else&#123;</div><div class="line">                alert("值必需大于0.");  </div><div class="line">            &#125;</div><div class="line">        &#125;catch(e)</div><div class="line">        &#123;</div><div class="line">            alert("设置失败，请检查输入值的有效性。")  </div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">     </div><div class="line">    //运行信息提示</div><div class="line">    function runTips(message)</div><div class="line">    &#123;</div><div class="line">        tipsDom.innerHTML = message;</div><div class="line">    &#125;</div><div class="line">    //清除绘制</div><div class="line">    function clearOverlays()</div><div class="line">    &#123;</div><div class="line">        map.clearOverlays();</div><div class="line">        drawingManager.close();</div><div class="line">        newDrawingManager();</div><div class="line">    &#125;</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">linkrel="stylesheet"href="http:</span>//<span class="attr">api.map.baidu.com</span>/<span class="attr">library</span>/<span class="attr">DrawingManager</span>/<span class="attr">1.4</span>/<span class="attr">src</span>/<span class="attr">DrawingManager_min.css</span>"/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"> </div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">divid="tips"style="</span> <span class="attr">margin-left:10px</span>; <span class="attr">margin-top:5px</span>;<span class="attr">float:left</span>"&gt;</span></div><div class="line">左键单击开始绘制多边形，双击完成绘制。使用左侧工具栏改变地图位置，结果数据保存在c:\poi.txt，自行使用工具处理。此程序只进行了简单的测试。 By：悠树</div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">divalign="right"style="padding:5px</span> <span class="attr">10px</span>; <span class="attr">margin-left:10px</span>"&gt;</span></div><div class="line">密度：<span class="tag">&lt;<span class="name">inputtype="text"value="0.001"id=</span> "<span class="attr">step</span>"<span class="attr">style</span>=<span class="string">"width:50px"</span>/&gt;</span>&amp;nbsp;<span class="tag">&lt;<span class="name">inputtype="button"value="设置"onclick="setStep(this)"</span>/&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"> </div><div class="line"><span class="tag">&lt;<span class="name">divid="container"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">scripttype="text</span>/<span class="attr">javascript</span>"&gt;</span></div><div class="line"> </div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="" alt="jieme wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎您扫一扫上面的微信公众号，订阅我的博客！</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/POI/" rel="tag"># POI</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/30/C-mvc内容/" rel="next" title="C#mvc内容">
+                <i class="fa fa-chevron-left"></i> C#mvc内容
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="jieme" />
+          <p class="site-author-name" itemprop="name">jieme</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jieme</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/three.min.js"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
