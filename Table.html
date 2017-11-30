@@ -1,0 +1,249 @@
+﻿<HTML>
+ <HEAD>
+  <TITLE> New Document </TITLE>
+
+  <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+		
+	<style type="text/css">		
+		table{
+			border:1px solid blue;
+			border-collapse: collapse;
+		}
+ 		td{
+			border:1px solid blue;
+		} 
+	</style>
+ </HEAD>
+  <script type="text/javascript">
+	$("#checkall").click(function () {
+	var flag = this.checked;
+	$("input:checkbox[name='ids']").each(function () {
+		this.checked = flag;
+	});
+});
+
+function addRow(tid) {
+    tid = tid || "#subTable";   // tid 为true 返回 tid 或者""; 
+
+    var i = $(tid + " tr").size() - 1;
+    var ii = parseInt($(tid + " tr").last().children("td:eq(1)").find("input").val());
+
+    var tr = $(tid + " tr").eq(i).html().replace(/\[[\d]\]/g, "[" + ii + "]").replace(/_[\d]__/g, "_" + ii + "__");
+    $(tid).append("<tr>" + tr + "</tr>");
+
+    var prevTR = $(tid + " tr").last().prev('tr').children("td:eq(1)").find("input").val();
+    var order = parseInt(prevTR);
+    $(tid + " tr").last().find("input[type='text']").each(function (j) {
+        if (j == 0) {
+            $(this).val(order + 1);
+        } else {
+            $(this).val("1");
+            $(this).val("");
+        }
+    });
+
+    //移除验证错误信息
+    $(tid + " tr").last().find("input.input-validation-error").each(function (j) {
+        $(this).removeClass("input-validation-error");
+    });
+    $(tid + " tr").last().find(".field-validation-error").each(function (j) {
+        $(this).removeClass("field-validation-error");
+        $(this).addClass("field-validation-valid");
+        $(this).children().remove();
+    });
+
+    //重新应用验证
+    try {
+        $("#mainForm").removeData("validator");
+        $("#mainForm").data("unobtrusiveValidation", null);
+        $.validator.unobtrusive.parse(document);
+    }
+    catch (err) {
+        //alert(err.message);
+    }
+}
+
+function delRow(tid) {
+    tid = tid || "#subTable";
+
+    var tr = "<tr>" + $(tid + " tr").last().html() + "</tr>";
+    $(tid + " tr").each(function (i) {
+        var chk = $(this).find("input[type='checkbox']");
+        if (chk.attr("id") != "checkall" && chk.attr("checked")) {
+            $(this).remove();
+        }
+    });
+
+    // var size = $(tid + " tr").size();
+    var size = $(tid + " tr").find("input[type='checkbox']").size();
+    if (size < 2) {
+        tr = tr.replace(/\[[\d]\]/, "[0]").replace(/_[\d]__/, "_0__");
+        $(tid).append(tr);
+
+        $(tid + " tr").eq(1).find("input[type='text']").each(function (j) {
+            if (j == 0) {
+                $(this).val(1);
+            } else {
+                $(this).val("");
+            }
+        });
+        $("#checkall").removeAttr("checked");
+    } else {
+        //$(tid + " tr").each(function (i) {
+        $(tid + " tr td").children("input[type='checkbox']").parent().parent().each(function (i) {
+            
+            if (i > 0) {
+                $(this).find("input[type='text']").each(function (j) {
+                    if (j == 0) {
+                        $(this).val(i);
+                    }
+
+                    var name = $(this).attr("name");
+                    if (name)
+                        $(this).attr("name", name.replace(/[\d]/, i - 1));
+                    var textboxname = $(this).attr("textboxname");
+                    if (textboxname)
+                        $(this).attr("textboxname", textboxname.replace(/[\d]/, i - 1));
+
+                    var comboname = $(this).attr("comboname");
+                    if (comboname)
+                        $(this).attr("comboname", comboname.replace(/[\d]/, i - 1));
+
+                    var id = $(this).attr("id");
+                    $(this).attr("id", id.replace(/[\d]/, i - 1));
+                });
+
+                $(this).find("input[type='hidden']").each(function (j) {
+                    var name = $(this).attr("name");
+                    if (name)
+                        $(this).attr("name", name.replace(/[\d]/, i - 1));
+                });
+            }
+        });
+    }
+
+    //日期 
+    $(tid + " tr").last().find("span.datebox").each(function (j) {
+        $(this).remove();
+    });
+    $(tid + " tr").last().find("input.datebox-f").each(function (j) {
+        $(this).datebox({ "required": false });
+    });
+}
+
+function comeback(e) {
+	var href = $(e).attr("data-href");
+	location.href = href;
+}
+
+  
+  </script> 
+
+ <BODY>
+   <table class="jj_table" id="subTable">
+            <caption>
+                    <div style="text-align:left">
+                        <input type="button" value="添加行" title="添加行" class="btn" onclick="addRow();" />
+                        <input type="button" value="删除行" title="删除行" class="btn" onclick="delRow();" />
+                    </div>
+            </caption>
+        <thead>
+            <tr>
+               <td style="width: 8px;" rowspan="3">
+                   <input type="checkbox" id="checkall" />
+               </td>
+                <td rowspan="3" class="th-xh" style="display:none;"><label>序号</label></td>
+                <td rowspan="3" ><label>回路号</label></td>
+                <td rowspan="3" colspan="2" ><label>仪表位号</label></td>
+                <td colspan="7" ><label>输入/显示（指示、记录）/输出</label></td>
+                <td rowspan="3" colspan="2"><label>报警条件</label></td>
+                <td rowspan="3" colspan="2"><label>联锁动作</label></td>
+                <td rowspan="3" colspan="2"><label>结果</label></td>
+            </tr>
+            <tr>
+                <td rowspan ="2"colspan="2"><label>测量范围</label></td>
+                <td colspan="5"><label>实测值<br></label></td>
+           </tr>
+            <tr>
+                <td><label>0</label></td>
+                <td><label>50%</label></td>
+                <td><label>100%</label></td>
+                <td><label>50%</label></td>
+                <td><label>0</label></td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+               <td rowspan="6"><input type="checkbox" name="ids" /></td>
+                    <td rowspan="6" style="display:none;"></td>
+                    <td rowspan="6">1</td>
+                    <td colspan="2">1</td>
+                    <td colspan="2">1</td>
+                    <td>1</td>                    
+                    <td>1</td> 
+                    <td>1</td> 
+                    <td>1</td> 
+                    <td>1</td> 
+                    <td colspan="2" rowspan="6">1</td> 
+                    <td colspan="2" rowspan="6">1</td> 
+                    <td colspan="2">1</td> 
+                </tr>
+                
+                <tr>
+                    <td colspan="2">2</td> 
+                    <td colspan="2">2</td> 
+                    <td>2</td> 
+                    <td>2</td> 
+                    <td>2</td> 
+                    <td>2</td> 
+                    <td>2</td> 
+                    <td colspan="2">2</td> 
+                </tr>
+                
+                <tr>
+                    <td colspan="2">3</td> 
+                    <td colspan="2">3</td> 
+                    <td>3</td> 
+                    <td>3</td> 
+                    <td>3</td> 
+                    <td>3</td> 
+                    <td>3</td> 
+                    <td colspan="2">3</td> 
+                </tr>
+                
+                <tr>
+                    <td colspan="2">4</td> 
+                    <td colspan="2">4</td> 
+                    <td>4</td> 
+                    <td>4</td> 
+                    <td>4</td> 
+                    <td>4</td> 
+                    <td>4</td> 
+                   <td colspan="2">4</td> 
+                </tr>
+                
+                <tr>
+                    <td colspan="2">5</td> 
+                    <td colspan="2">5</td> 
+                    <td>5</td> 
+                    <td>5</td> 
+                    <td>5</td> 
+                    <td>5</td> 
+                    <td>5</td> 
+                   <td colspan="2">5</td> 
+                </tr>
+                
+                <tr>
+                    <td colspan="2">6</td> 
+                    <td colspan="2">6</td> 
+                    <td>6</td> 
+                    <td>6</td> 
+                    <td>6</td> 
+                    <td>6</td> 
+                    <td>6</td> 
+                   <td colspan="2">6</td> 
+                </tr>
+        </tbody>
+    </table>
+ </BODY>
+</HTML>
