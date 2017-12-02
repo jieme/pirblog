@@ -13,7 +13,7 @@ timezone:
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: https://jieme.github.io/pirblog/  
-root: /pirblog/
+root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 
@@ -74,6 +74,8 @@ pagination_dir: page
 ## Themes: https://hexo.io/themes/
 theme: next
 
+
+
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
@@ -97,3 +99,11 @@ use_motion: true  # 开启动画效果
 
 canvas_nest: true #开启动画
 three_waves: true #开启动画
+
+# hexo-admin authentification
+admin:
+  username: jieme
+  password_hash: $2a$10$1VFXv46fO7BFyhlsTSNCKe.mlTVXtpaD9xts/pGtCocGDnF1U2ogK
+  secret: jieme2pirblog
+   #admin部署执行文件
+  deployCommand: './hexo-deploy.sh'
